@@ -5,6 +5,7 @@
 
 const pull = require('pull-stream')
 const levelup = require('levelup')
+const leveldown = require('leveldown')
 
 const asyncFilter = require('interface-datastore').utils.asyncFilter
 const asyncSort = require('interface-datastore').utils.asyncSort
@@ -24,7 +25,7 @@ class LevelDatastore {
   /* :: db: levelup */
 
   constructor (path /* : string */, opts /* : ?LevelOptions */) {
-    this.db = levelup(path, Object.assign({}, opts, {
+    this.db = levelup(opts.db ? opts.db(path) : leveldown(path), Object.assign({}, opts, {
       compression: false, // same default as go
       valueEncoding: 'binary'
     }))
